@@ -1,0 +1,437 @@
+GAS LISTING /tmp/cc6E3yik.s 			page 1
+
+
+   1               		.file	"keypad.c"
+   2               		.arch at90s8515
+   3               	__SREG__ = 0x3f
+   4               	__SP_H__ = 0x3e
+   5               	__SP_L__ = 0x3d
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               		.data
+  11               		.type	altIndex, @object
+  12               		.size	altIndex, 1
+  13               	altIndex:
+  14 0000 64        		.byte	100
+  15               		.text
+  16               	.global	initKeypad
+  17               		.type	initKeypad, @function
+  18               	initKeypad:
+  19               	/* prologue: frame size=0 */
+  20               	/* prologue end (size=0) */
+  21 0000 98B3      		in r25,56-0x20
+  22 0002 80EE      		ldi r24,lo8(-32)
+  23 0004 9823      		and r25,r24
+  24 0006 9760      		ori r25,lo8(7)
+  25 0008 98BB      		out 56-0x20,r25
+  26 000a 97B3      		in r25,55-0x20
+  27 000c 9823      		and r25,r24
+  28 000e 892F      		mov r24,r25
+  29 0010 8861      		ori r24,lo8(24)
+  30 0012 87BB      		out 55-0x20,r24
+  31 0014 80E0      		ldi r24,lo8(keyQueue)
+  32 0016 90E0      		ldi r25,hi8(keyQueue)
+  33 0018 00D0      		rcall coa_nova
+  34               	/* epilogue: frame size=0 */
+  35 001a 0895      		ret
+  36               	/* epilogue end (size=1) */
+  37               	/* function initKeypad size 14 (13) */
+  38               		.size	initKeypad, .-initKeypad
+  39               		.section	.progmem.data,"a",@progbits
+  40               		.type	keyArray, @object
+  41               		.size	keyArray, 12
+  42               	keyArray:
+  43 0000 31        		.byte	49
+  44 0001 32        		.byte	50
+  45 0002 33        		.byte	51
+  46 0003 34        		.byte	52
+  47 0004 35        		.byte	53
+  48 0005 36        		.byte	54
+  49 0006 37        		.byte	55
+  50 0007 38        		.byte	56
+  51 0008 39        		.byte	57
+  52 0009 08        		.byte	8
+  53 000a 30        		.byte	48
+  54 000b 0A        		.byte	10
+  55               		.type	alternateKeys, @object
+  56               		.size	alternateKeys, 40
+  57               	alternateKeys:
+GAS LISTING /tmp/cc6E3yik.s 			page 2
+
+
+  58 000c 30        		.byte	48
+  59 000d 2E        		.byte	46
+  60 000e 51        		.byte	81
+  61 000f 5A        		.byte	90
+  62 0010 31        		.byte	49
+  63 0011 20        		.byte	32
+  64 0012 5B        		.byte	91
+  65 0013 5D        		.byte	93
+  66 0014 32        		.byte	50
+  67 0015 41        		.byte	65
+  68 0016 42        		.byte	66
+  69 0017 43        		.byte	67
+  70 0018 33        		.byte	51
+  71 0019 44        		.byte	68
+  72 001a 45        		.byte	69
+  73 001b 46        		.byte	70
+  74 001c 34        		.byte	52
+  75 001d 47        		.byte	71
+  76 001e 48        		.byte	72
+  77 001f 49        		.byte	73
+  78 0020 35        		.byte	53
+  79 0021 4A        		.byte	74
+  80 0022 4B        		.byte	75
+  81 0023 4C        		.byte	76
+  82 0024 36        		.byte	54
+  83 0025 4D        		.byte	77
+  84 0026 4E        		.byte	78
+  85 0027 4F        		.byte	79
+  86 0028 37        		.byte	55
+  87 0029 50        		.byte	80
+  88 002a 52        		.byte	82
+  89 002b 53        		.byte	83
+  90 002c 38        		.byte	56
+  91 002d 54        		.byte	84
+  92 002e 55        		.byte	85
+  93 002f 56        		.byte	86
+  94 0030 39        		.byte	57
+  95 0031 57        		.byte	87
+  96 0032 58        		.byte	88
+  97 0033 59        		.byte	89
+  98               		.lcomm lastKey.0,1
+  99               		.lcomm lastAddedKey.1,1
+ 100               		.data
+ 101               		.type	timeAfterKeyRelease.2, @object
+ 102               		.size	timeAfterKeyRelease.2, 1
+ 103               	timeAfterKeyRelease.2:
+ 104 0001 FF        		.byte	-1
+ 105               		.text
+ 106               	.global	polling_teclat
+ 107               		.type	polling_teclat, @function
+ 108               	polling_teclat:
+ 109               	/* prologue: frame size=0 */
+ 110 001c 1F93      		push r17
+ 111 001e CF93      		push r28
+ 112               	/* prologue end (size=2) */
+ 113 0020 E0E0      		ldi r30,lo8(0)
+ 114 0022 37EE      		ldi r19,lo8(-25)
+GAS LISTING /tmp/cc6E3yik.s 			page 3
+
+
+ 115               	.L11:
+ 116 0024 28B3      		in r18,56-0x20
+ 117 0026 2323      		and r18,r19
+ 118 0028 8E2F      		mov r24,r30
+ 119 002a 9927      		clr r25
+ 120 002c 880F      		lsl r24
+ 121 002e 991F      		rol r25
+ 122 0030 880F      		lsl r24
+ 123 0032 991F      		rol r25
+ 124 0034 880F      		lsl r24
+ 125 0036 991F      		rol r25
+ 126 0038 282B      		or r18,r24
+ 127 003a 28BB      		out 56-0x20,r18
+ 128 003c 20E0      		ldi r18,lo8(0)
+ 129               	.L9:
+ 130 003e 2F5F      		subi r18,lo8(-(1))
+ 131 0040 2436      		cpi r18,lo8(100)
+ 132 0042 E8F3      		brlo .L9
+ 133 0044 26B3      		in r18,54-0x20
+ 134 0046 2770      		andi r18,lo8(7)
+ 135 0048 2730      		cpi r18,lo8(7)
+ 136 004a 19F4      		brne .L4
+ 137 004c EF5F      		subi r30,lo8(-(1))
+ 138 004e E430      		cpi r30,lo8(4)
+ 139 0050 48F3      		brlo .L11
+ 140               	.L4:
+ 141 0052 E430      		cpi r30,lo8(4)
+ 142 0054 59F4      		brne .L12
+ 143 0056 1092 0000 		sts lastKey.0,__zero_reg__
+ 144 005a 8091 0000 		lds r24,timeAfterKeyRelease.2
+ 145 005e 8436      		cpi r24,lo8(100)
+ 146 0060 08F0      		brlo .+2
+ 147 0062 7BC0      		rjmp .L2
+ 148 0064 8F5F      		subi r24,lo8(-(1))
+ 149 0066 8093 0000 		sts timeAfterKeyRelease.2,r24
+ 150 006a 77C0      		rjmp .L2
+ 151               	.L12:
+ 152 006c 22FD      		sbrc r18,2
+ 153 006e 02C0      		rjmp .L14
+ 154 0070 22E0      		ldi r18,lo8(2)
+ 155 0072 06C0      		rjmp .L15
+ 156               	.L14:
+ 157 0074 21FD      		sbrc r18,1
+ 158 0076 02C0      		rjmp .L16
+ 159 0078 21E0      		ldi r18,lo8(1)
+ 160 007a 02C0      		rjmp .L15
+ 161               	.L16:
+ 162 007c 20FF      		sbrs r18,0
+ 163 007e 20E0      		ldi r18,lo8(0)
+ 164               	.L15:
+ 165 0080 FF27      		clr r31
+ 166 0082 8E2F      		mov r24,r30
+ 167 0084 9F2F      		mov r25,r31
+ 168 0086 880F      		lsl r24
+ 169 0088 991F      		rol r25
+ 170 008a E80F      		add r30,r24
+ 171 008c F91F      		adc r31,r25
+GAS LISTING /tmp/cc6E3yik.s 			page 4
+
+
+ 172 008e E20F      		add r30,r18
+ 173 0090 F11D      		adc r31,__zero_reg__
+ 174 0092 E050      		subi r30,lo8(-(keyArray))
+ 175 0094 F040      		sbci r31,hi8(-(keyArray))
+ 176               	/* #APP */
+ 177 0096 C895      		lpm
+ 178 0098 C02D      		mov r28, r0
+ 179               		
+ 180               	/* #NOAPP */
+ 181 009a 8091 0000 		lds r24,lastKey.0
+ 182 009e 8823      		tst r24
+ 183 00a0 19F4      		brne .L19
+ 184 00a2 C093 0000 		sts lastKey.0,r28
+ 185 00a6 59C0      		rjmp .L2
+ 186               	.L19:
+ 187 00a8 8091 0000 		lds r24,lastKey.0
+ 188 00ac C817      		cp r28,r24
+ 189 00ae 19F0      		breq .L20
+ 190 00b0 C093 0000 		sts lastKey.0,r28
+ 191 00b4 52C0      		rjmp .L2
+ 192               	.L20:
+ 193 00b6 9091 0000 		lds r25,timeAfterKeyRelease.2
+ 194 00ba 9923      		tst r25
+ 195 00bc 09F4      		brne .+2
+ 196 00be 4DC0      		rjmp .L2
+ 197 00c0 8091 0000 		lds r24,lastAddedKey.1
+ 198 00c4 8C17      		cp r24,r28
+ 199 00c6 A1F5      		brne .L22
+ 200 00c8 9233      		cpi r25,lo8(50)
+ 201 00ca 90F5      		brsh .L22
+ 202 00cc C033      		cpi r28,lo8(48)
+ 203 00ce 84F1      		brlt .L22
+ 204 00d0 CA33      		cpi r28,lo8(58)
+ 205 00d2 74F5      		brge .L22
+ 206 00d4 8091 0000 		lds r24,altIndex
+ 207 00d8 8430      		cpi r24,lo8(4)
+ 208 00da 50F5      		brsh .L22
+ 209 00dc 8F5F      		subi r24,lo8(-(1))
+ 210 00de 8093 0000 		sts altIndex,r24
+ 211 00e2 8430      		cpi r24,lo8(4)
+ 212 00e4 11F4      		brne .L23
+ 213 00e6 1092 0000 		sts altIndex,__zero_reg__
+ 214               	.L23:
+ 215 00ea 8C2F      		mov r24,r28
+ 216 00ec 8053      		subi r24,lo8(-(-48))
+ 217 00ee E82F      		mov r30,r24
+ 218 00f0 FF27      		clr r31
+ 219 00f2 8E2F      		mov r24,r30
+ 220 00f4 9F2F      		mov r25,r31
+ 221 00f6 880F      		lsl r24
+ 222 00f8 991F      		rol r25
+ 223 00fa 880F      		lsl r24
+ 224 00fc 991F      		rol r25
+ 225 00fe 2091 0000 		lds r18,altIndex
+ 226 0102 F92F      		mov r31,r25
+ 227 0104 E82F      		mov r30,r24
+ 228 0106 E20F      		add r30,r18
+GAS LISTING /tmp/cc6E3yik.s 			page 5
+
+
+ 229 0108 F11D      		adc r31,__zero_reg__
+ 230 010a E050      		subi r30,lo8(-(alternateKeys))
+ 231 010c F040      		sbci r31,hi8(-(alternateKeys))
+ 232               	/* #APP */
+ 233 010e C895      		lpm
+ 234 0110 102D      		mov r17, r0
+ 235               		
+ 236               	/* #NOAPP */
+ 237 0112 68E0      		ldi r22,lo8(8)
+ 238 0114 70E0      		ldi r23,hi8(8)
+ 239 0116 80E0      		ldi r24,lo8(keyQueue)
+ 240 0118 90E0      		ldi r25,hi8(keyQueue)
+ 241 011a 00D0      		rcall afageix_element
+ 242 011c 812F      		mov r24,r17
+ 243 011e 9927      		clr r25
+ 244 0120 87FD      		sbrc r24,7
+ 245 0122 9095      		com r25
+ 246 0124 682F      		mov r22,r24
+ 247 0126 792F      		mov r23,r25
+ 248 0128 80E0      		ldi r24,lo8(keyQueue)
+ 249 012a 90E0      		ldi r25,hi8(keyQueue)
+ 250 012c 00D0      		rcall afageix_element
+ 251 012e 11C0      		rjmp .L24
+ 252               	.L22:
+ 253 0130 8091 0000 		lds r24,altIndex
+ 254 0134 8430      		cpi r24,lo8(4)
+ 255 0136 10F4      		brsh .L25
+ 256 0138 1092 0000 		sts altIndex,__zero_reg__
+ 257               	.L25:
+ 258 013c C093 0000 		sts lastAddedKey.1,r28
+ 259 0140 8C2F      		mov r24,r28
+ 260 0142 9927      		clr r25
+ 261 0144 87FD      		sbrc r24,7
+ 262 0146 9095      		com r25
+ 263 0148 682F      		mov r22,r24
+ 264 014a 792F      		mov r23,r25
+ 265 014c 80E0      		ldi r24,lo8(keyQueue)
+ 266 014e 90E0      		ldi r25,hi8(keyQueue)
+ 267 0150 00D0      		rcall afageix_element
+ 268               	.L24:
+ 269 0152 C093 0000 		sts lastKey.0,r28
+ 270 0156 1092 0000 		sts timeAfterKeyRelease.2,__zero_reg__
+ 271               	.L2:
+ 272               	/* epilogue: frame size=0 */
+ 273 015a CF91      		pop r28
+ 274 015c 1F91      		pop r17
+ 275 015e 0895      		ret
+ 276               	/* epilogue end (size=3) */
+ 277               	/* function polling_teclat size 171 (166) */
+ 278               		.size	polling_teclat, .-polling_teclat
+ 279               	.global	getchar_keypad
+ 280               		.type	getchar_keypad, @function
+ 281               	getchar_keypad:
+ 282               	/* prologue: frame size=0 */
+ 283               	/* prologue end (size=0) */
+ 284               	.L32:
+ 285 0160 80E0      		ldi r24,lo8(keyQueue)
+GAS LISTING /tmp/cc6E3yik.s 			page 6
+
+
+ 286 0162 90E0      		ldi r25,hi8(keyQueue)
+ 287 0164 00D0      		rcall treu_element
+ 288 0166 8F3F      		cpi r24,lo8(-1)
+ 289 0168 D9F3      		breq .L32
+ 290 016a 9927      		clr r25
+ 291 016c 87FD      		sbrc r24,7
+ 292 016e 9095      		com r25
+ 293               	/* epilogue: frame size=0 */
+ 294 0170 0895      		ret
+ 295               	/* epilogue end (size=1) */
+ 296               	/* function getchar_keypad size 9 (8) */
+ 297               		.size	getchar_keypad, .-getchar_keypad
+ 298               	.global	Entrada_Teclat
+ 299               		.type	Entrada_Teclat, @function
+ 300               	Entrada_Teclat:
+ 301               	/* prologue: frame size=0 */
+ 302 0172 EF92      		push r14
+ 303 0174 FF92      		push r15
+ 304 0176 1F93      		push r17
+ 305 0178 CF93      		push r28
+ 306               	/* prologue end (size=4) */
+ 307 017a E82E      		mov r14,r24
+ 308 017c F92E      		mov r15,r25
+ 309 017e 162F      		mov r17,r22
+ 310 0180 C0E0      		ldi r28,lo8(0)
+ 311 0182 C617      		cp r28,r22
+ 312 0184 D8F4      		brsh .L37
+ 313               	.L43:
+ 314 0186 ECDF      		rcall getchar_keypad
+ 315 0188 982F      		mov r25,r24
+ 316 018a 8F5F      		subi r24,lo8(-(1))
+ 317 018c 8230      		cpi r24,lo8(2)
+ 318 018e A0F0      		brlo .L36
+ 319 0190 9D30      		cpi r25,lo8(13)
+ 320 0192 91F0      		breq .L36
+ 321 0194 9830      		cpi r25,lo8(8)
+ 322 0196 31F4      		brne .L40
+ 323 0198 CC23      		tst r28
+ 324 019a 71F0      		breq .L36
+ 325 019c C150      		subi r28,lo8(-(-1))
+ 326 019e 892F      		mov r24,r25
+ 327 01a0 00D0      		rcall putchar_lcd
+ 328 01a2 0AC0      		rjmp .L36
+ 329               	.L40:
+ 330 01a4 9A30      		cpi r25,lo8(10)
+ 331 01a6 51F0      		breq .L37
+ 332 01a8 FF2D      		mov r31,r15
+ 333 01aa EE2D      		mov r30,r14
+ 334 01ac EC0F      		add r30,r28
+ 335 01ae F11D      		adc r31,__zero_reg__
+ 336 01b0 9083      		st Z,r25
+ 337 01b2 CF5F      		subi r28,lo8(-(1))
+ 338 01b4 892F      		mov r24,r25
+ 339 01b6 00D0      		rcall putchar_lcd
+ 340               	.L36:
+ 341 01b8 C117      		cp r28,r17
+ 342 01ba 28F3      		brlo .L43
+GAS LISTING /tmp/cc6E3yik.s 			page 7
+
+
+ 343               	.L37:
+ 344 01bc FF2D      		mov r31,r15
+ 345 01be EE2D      		mov r30,r14
+ 346 01c0 EC0F      		add r30,r28
+ 347 01c2 F11D      		adc r31,__zero_reg__
+ 348 01c4 1082      		st Z,__zero_reg__
+ 349               	/* epilogue: frame size=0 */
+ 350 01c6 CF91      		pop r28
+ 351 01c8 1F91      		pop r17
+ 352 01ca FF90      		pop r15
+ 353 01cc EF90      		pop r14
+ 354 01ce 0895      		ret
+ 355               	/* epilogue end (size=5) */
+ 356               	/* function Entrada_Teclat size 47 (38) */
+ 357               		.size	Entrada_Teclat, .-Entrada_Teclat
+ 358               	.global	iskeypressed
+ 359               		.type	iskeypressed, @function
+ 360               	iskeypressed:
+ 361               	/* prologue: frame size=0 */
+ 362 01d0 CF93      		push r28
+ 363 01d2 DF93      		push r29
+ 364               	/* prologue end (size=2) */
+ 365 01d4 C0E0      		ldi r28,lo8(0)
+ 366 01d6 D0E0      		ldi r29,hi8(0)
+ 367 01d8 80E0      		ldi r24,lo8(keyQueue)
+ 368 01da 90E0      		ldi r25,hi8(keyQueue)
+ 369 01dc 00D0      		rcall coa_buida
+ 370 01de 8823      		tst r24
+ 371 01e0 11F4      		brne .L46
+ 372 01e2 C1E0      		ldi r28,lo8(1)
+ 373 01e4 D0E0      		ldi r29,hi8(1)
+ 374               	.L46:
+ 375 01e6 8C2F      		mov r24,r28
+ 376 01e8 9D2F      		mov r25,r29
+ 377               	/* epilogue: frame size=0 */
+ 378 01ea DF91      		pop r29
+ 379 01ec CF91      		pop r28
+ 380 01ee 0895      		ret
+ 381               	/* epilogue end (size=3) */
+ 382               	/* function iskeypressed size 16 (11) */
+ 383               		.size	iskeypressed, .-iskeypressed
+ 384               		.comm keyQueue,18,1
+ 385               	/* File "keypad.c": code  257 = 0x0101 ( 236), prologues   8, epilogues  13 */
+GAS LISTING /tmp/cc6E3yik.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 keypad.c
+                            *ABS*:0000003f __SREG__
+                            *ABS*:0000003e __SP_H__
+                            *ABS*:0000003d __SP_L__
+                            *ABS*:00000000 __tmp_reg__
+                            *ABS*:00000001 __zero_reg__
+     /tmp/cc6E3yik.s:13     .data:00000000 altIndex
+     /tmp/cc6E3yik.s:18     .text:00000000 initKeypad
+                            *COM*:00000012 keyQueue
+     /tmp/cc6E3yik.s:42     .progmem.data:00000000 keyArray
+     /tmp/cc6E3yik.s:57     .progmem.data:0000000c alternateKeys
+                             .bss:00000000 lastKey.0
+     /tmp/cc6E3yik.s:98     .bss:00000001 lastAddedKey.1
+     /tmp/cc6E3yik.s:103    .data:00000001 timeAfterKeyRelease.2
+     /tmp/cc6E3yik.s:108    .text:0000001c polling_teclat
+     /tmp/cc6E3yik.s:281    .text:00000160 getchar_keypad
+     /tmp/cc6E3yik.s:300    .text:00000172 Entrada_Teclat
+     /tmp/cc6E3yik.s:360    .text:000001d0 iskeypressed
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+coa_nova
+afageix_element
+treu_element
+putchar_lcd
+coa_buida

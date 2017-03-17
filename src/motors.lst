@@ -1,0 +1,500 @@
+GAS LISTING /tmp/ccFkCDwv.s 			page 1
+
+
+   1               		.file	"motors.c"
+   2               		.arch at90s8515
+   3               	__SREG__ = 0x3f
+   4               	__SP_H__ = 0x3e
+   5               	__SP_L__ = 0x3d
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.global __do_copy_data
+   9               		.global __do_clear_bss
+  10               	.global	stableLimitSwitches
+  11               	.global	stableLimitSwitches
+  12               		.section .bss
+  13               		.type	stableLimitSwitches, @object
+  14               		.size	stableLimitSwitches, 1
+  15               	stableLimitSwitches:
+  16 0000 00        		.skip 1,0
+  17               	.global	Ax
+  18               	.global	Ax
+  19               		.type	Ax, @object
+  20               		.size	Ax, 2
+  21               	Ax:
+  22 0001 0000      		.skip 2,0
+  23               	.global	Ay
+  24               	.global	Ay
+  25               		.type	Ay, @object
+  26               		.size	Ay, 2
+  27               	Ay:
+  28 0003 0000      		.skip 2,0
+  29               		.lcomm lastLimitSwitches.0,1
+  30               		.text
+  31               	.global	polling_fc
+  32               		.type	polling_fc, @function
+  33               	polling_fc:
+  34               	/* prologue: frame size=0 */
+  35               	/* prologue end (size=0) */
+  36 0000 80B3      		in r24,48-0x20
+  37 0002 9927      		clr r25
+  38 0004 8873      		andi r24,lo8(56)
+  39 0006 9070      		andi r25,hi8(56)
+  40 0008 282F      		mov r18,r24
+  41 000a 392F      		mov r19,r25
+  42 000c 3595      		asr r19
+  43 000e 2795      		ror r18
+  44 0010 3595      		asr r19
+  45 0012 2795      		ror r18
+  46 0014 3595      		asr r19
+  47 0016 2795      		ror r18
+  48 0018 8091 0000 		lds r24,lastLimitSwitches.0
+  49 001c 2817      		cp r18,r24
+  50 001e 19F0      		breq .L2
+  51 0020 2093 0000 		sts lastLimitSwitches.0,r18
+  52 0024 0895      		ret
+  53               	.L2:
+  54 0026 9091 0000 		lds r25,lastLimitSwitches.0
+  55 002a 8091 0000 		lds r24,stableLimitSwitches
+  56 002e 9817      		cp r25,r24
+  57 0030 11F0      		breq .L1
+GAS LISTING /tmp/ccFkCDwv.s 			page 2
+
+
+  58 0032 9093 0000 		sts stableLimitSwitches,r25
+  59               	.L1:
+  60 0036 0895      		ret
+  61               	/* epilogue: frame size=0 */
+  62               	/* epilogue: noreturn */
+  63               	/* epilogue end (size=0) */
+  64               	/* function polling_fc size 28 (28) */
+  65               		.size	polling_fc, .-polling_fc
+  66               	.global	MotorDelayInit
+  67               		.type	MotorDelayInit, @function
+  68               	MotorDelayInit:
+  69               	/* prologue: frame size=0 */
+  70               	/* prologue end (size=0) */
+  71 0038 86E0      		ldi r24,lo8(6)
+  72 003a 8093 0000 		sts delayMs,r24
+  73 003e 88EC      		ldi r24,lo8(-56)
+  74 0040 8093 0000 		sts delayCntr,r24
+  75               	/* epilogue: frame size=0 */
+  76 0044 0895      		ret
+  77               	/* epilogue end (size=1) */
+  78               	/* function MotorDelayInit size 7 (6) */
+  79               		.size	MotorDelayInit, .-MotorDelayInit
+  80               	.global	MotorDelay
+  81               		.type	MotorDelay, @function
+  82               	MotorDelay:
+  83               	/* prologue: frame size=0 */
+  84               	/* prologue end (size=0) */
+  85 0046 8091 0000 		lds r24,delayCntr
+  86 004a 8150      		subi r24,lo8(-(-1))
+  87 004c 8093 0000 		sts delayCntr,r24
+  88 0050 9091 0000 		lds r25,delayMs
+  89 0054 9430      		cpi r25,lo8(4)
+  90 0056 4CF0      		brlt .L7
+  91 0058 8823      		tst r24
+  92 005a 39F4      		brne .L7
+  93 005c 892F      		mov r24,r25
+  94 005e 8150      		subi r24,lo8(-(-1))
+  95 0060 8093 0000 		sts delayMs,r24
+  96 0064 84E6      		ldi r24,lo8(100)
+  97 0066 8093 0000 		sts delayCntr,r24
+  98               	.L7:
+  99 006a 8091 0000 		lds r24,delayMs
+ 100 006e 9927      		clr r25
+ 101 0070 87FD      		sbrc r24,7
+ 102 0072 9095      		com r25
+ 103 0074 00D0      		rcall delay
+ 104               	/* epilogue: frame size=0 */
+ 105 0076 0895      		ret
+ 106               	/* epilogue end (size=1) */
+ 107               	/* function MotorDelay size 25 (24) */
+ 108               		.size	MotorDelay, .-MotorDelay
+ 109               	.global	motors
+ 110               		.type	motors, @function
+ 111               	motors:
+ 112               	/* prologue: frame size=0 */
+ 113               	/* prologue end (size=0) */
+ 114 0078 8823      		tst r24
+GAS LISTING /tmp/ccFkCDwv.s 			page 3
+
+
+ 115 007a 19F0      		breq .L9
+ 116 007c C69A      		sbi 56-0x20,6
+ 117 007e DC9A      		sbi 59-0x20,4
+ 118 0080 0895      		ret
+ 119               	.L9:
+ 120 0082 C698      		cbi 56-0x20,6
+ 121 0084 DC98      		cbi 59-0x20,4
+ 122 0086 0895      		ret
+ 123               	/* epilogue: frame size=0 */
+ 124               	/* epilogue: noreturn */
+ 125               	/* epilogue end (size=0) */
+ 126               	/* function motors size 8 (8) */
+ 127               		.size	motors, .-motors
+ 128               	.global	SolenoidActivate
+ 129               		.type	SolenoidActivate, @function
+ 130               	SolenoidActivate:
+ 131               	/* prologue: frame size=0 */
+ 132               	/* prologue end (size=0) */
+ 133 0088 969A      		sbi 50-0x20,6
+ 134               	/* epilogue: frame size=0 */
+ 135 008a 0895      		ret
+ 136               	/* epilogue end (size=1) */
+ 137               	/* function SolenoidActivate size 2 (1) */
+ 138               		.size	SolenoidActivate, .-SolenoidActivate
+ 139               	.global	SolenoidDeactivate
+ 140               		.type	SolenoidDeactivate, @function
+ 141               	SolenoidDeactivate:
+ 142               	/* prologue: frame size=0 */
+ 143               	/* prologue end (size=0) */
+ 144 008c 9698      		cbi 50-0x20,6
+ 145               	/* epilogue: frame size=0 */
+ 146 008e 0895      		ret
+ 147               	/* epilogue end (size=1) */
+ 148               	/* function SolenoidDeactivate size 2 (1) */
+ 149               		.size	SolenoidDeactivate, .-SolenoidDeactivate
+ 150               	.global	MotorStepXY
+ 151               		.type	MotorStepXY, @function
+ 152               	MotorStepXY:
+ 153               	/* prologue: frame size=0 */
+ 154 0090 1F93      		push r17
+ 155 0092 CF93      		push r28
+ 156               	/* prologue end (size=2) */
+ 157 0094 C82F      		mov r28,r24
+ 158 0096 162F      		mov r17,r22
+ 159 0098 8130      		cpi r24,lo8(1)
+ 160 009a 11F4      		brne .L14
+ 161 009c DB98      		cbi 59-0x20,3
+ 162 009e 03C0      		rjmp .L15
+ 163               	.L14:
+ 164 00a0 8F3F      		cpi r24,lo8(-1)
+ 165 00a2 09F4      		brne .L15
+ 166 00a4 DB9A      		sbi 59-0x20,3
+ 167               	.L15:
+ 168 00a6 1130      		cpi r17,lo8(1)
+ 169 00a8 11F4      		brne .L17
+ 170 00aa C598      		cbi 56-0x20,5
+ 171 00ac 03C0      		rjmp .L18
+GAS LISTING /tmp/ccFkCDwv.s 			page 4
+
+
+ 172               	.L17:
+ 173 00ae 1F3F      		cpi r17,lo8(-1)
+ 174 00b0 09F4      		brne .L18
+ 175 00b2 C59A      		sbi 56-0x20,5
+ 176               	.L18:
+ 177 00b4 CC23      		tst r28
+ 178 00b6 21F0      		breq .L20
+ 179 00b8 DF9A      		sbi 59-0x20,7
+ 180 00ba C5DF      		rcall MotorDelay
+ 181 00bc DF98      		cbi 59-0x20,7
+ 182 00be C3DF      		rcall MotorDelay
+ 183               	.L20:
+ 184 00c0 1123      		tst r17
+ 185 00c2 41F0      		breq .L21
+ 186 00c4 C798      		cbi 56-0x20,7
+ 187 00c6 81E0      		ldi r24,lo8(1)
+ 188 00c8 90E0      		ldi r25,hi8(1)
+ 189 00ca 00D0      		rcall delay
+ 190 00cc C79A      		sbi 56-0x20,7
+ 191 00ce 81E0      		ldi r24,lo8(1)
+ 192 00d0 90E0      		ldi r25,hi8(1)
+ 193 00d2 00D0      		rcall delay
+ 194               	.L21:
+ 195 00d4 2C2F      		mov r18,r28
+ 196 00d6 3327      		clr r19
+ 197 00d8 27FD      		sbrc r18,7
+ 198 00da 3095      		com r19
+ 199 00dc 8091 0000 		lds r24,Ax
+ 200 00e0 9091 0000 		lds r25,(Ax)+1
+ 201 00e4 820F      		add r24,r18
+ 202 00e6 931F      		adc r25,r19
+ 203 00e8 9093 0000 		sts (Ax)+1,r25
+ 204 00ec 8093 0000 		sts Ax,r24
+ 205 00f0 212F      		mov r18,r17
+ 206 00f2 3327      		clr r19
+ 207 00f4 27FD      		sbrc r18,7
+ 208 00f6 3095      		com r19
+ 209 00f8 8091 0000 		lds r24,Ay
+ 210 00fc 9091 0000 		lds r25,(Ay)+1
+ 211 0100 820F      		add r24,r18
+ 212 0102 931F      		adc r25,r19
+ 213 0104 9093 0000 		sts (Ay)+1,r25
+ 214 0108 8093 0000 		sts Ay,r24
+ 215               	/* epilogue: frame size=0 */
+ 216 010c CF91      		pop r28
+ 217 010e 1F91      		pop r17
+ 218 0110 0895      		ret
+ 219               	/* epilogue end (size=3) */
+ 220               	/* function MotorStepXY size 65 (60) */
+ 221               		.size	MotorStepXY, .-MotorStepXY
+ 222               	.global	MotorGotoOrigin
+ 223               		.type	MotorGotoOrigin, @function
+ 224               	MotorGotoOrigin:
+ 225               	/* prologue: frame size=0 */
+ 226               	/* prologue end (size=0) */
+ 227 0112 60E0      		ldi r22,lo8(0)
+ 228 0114 862F      		mov r24,r22
+GAS LISTING /tmp/ccFkCDwv.s 			page 5
+
+
+ 229 0116 BCDF      		rcall MotorStepXY
+ 230 0118 8FDF      		rcall MotorDelayInit
+ 231 011a 8091 0000 		lds r24,stableLimitSwitches
+ 232 011e 81FD      		sbrc r24,1
+ 233 0120 08C0      		rjmp .L27
+ 234               	.L25:
+ 235 0122 60E0      		ldi r22,lo8(0)
+ 236 0124 8FEF      		ldi r24,lo8(-1)
+ 237 0126 B4DF      		rcall MotorStepXY
+ 238 0128 8EDF      		rcall MotorDelay
+ 239 012a 8091 0000 		lds r24,stableLimitSwitches
+ 240 012e 81FF      		sbrs r24,1
+ 241 0130 F8CF      		rjmp .L25
+ 242               	.L27:
+ 243 0132 1092 0000 		sts (Ax)+1,__zero_reg__
+ 244 0136 1092 0000 		sts Ax,__zero_reg__
+ 245 013a 1092 0000 		sts (Ay)+1,__zero_reg__
+ 246 013e 1092 0000 		sts Ay,__zero_reg__
+ 247               	/* epilogue: frame size=0 */
+ 248 0142 0895      		ret
+ 249               	/* epilogue end (size=1) */
+ 250               	/* function MotorGotoOrigin size 25 (24) */
+ 251               		.size	MotorGotoOrigin, .-MotorGotoOrigin
+ 252               	.global	MotorBresLine
+ 253               		.type	MotorBresLine, @function
+ 254               	MotorBresLine:
+ 255               	/* prologue: frame size=0 */
+ 256 0144 8F92      		push r8
+ 257 0146 9F92      		push r9
+ 258 0148 AF92      		push r10
+ 259 014a BF92      		push r11
+ 260 014c CF92      		push r12
+ 261 014e DF92      		push r13
+ 262 0150 EF92      		push r14
+ 263 0152 FF92      		push r15
+ 264 0154 0F93      		push r16
+ 265 0156 1F93      		push r17
+ 266 0158 CF93      		push r28
+ 267 015a DF93      		push r29
+ 268               	/* prologue end (size=12) */
+ 269 015c D92F      		mov r29,r25
+ 270 015e C82F      		mov r28,r24
+ 271 0160 C62E      		mov r12,r22
+ 272 0162 D72E      		mov r13,r23
+ 273 0164 69DF      		rcall MotorDelayInit
+ 274 0166 8091 0000 		lds r24,Ax
+ 275 016a 9091 0000 		lds r25,(Ax)+1
+ 276 016e EC2E      		mov r14,r28
+ 277 0170 FD2E      		mov r15,r29
+ 278 0172 E81A      		sub r14,r24
+ 279 0174 F90A      		sbc r15,r25
+ 280 0176 22F4      		brpl .L29
+ 281 0178 F094      		com r15
+ 282 017a E194      		neg r14
+ 283 017c F108      		sbc r15,__zero_reg__
+ 284 017e F394      		inc r15
+ 285               	.L29:
+GAS LISTING /tmp/ccFkCDwv.s 			page 6
+
+
+ 286 0180 8091 0000 		lds r24,Ay
+ 287 0184 9091 0000 		lds r25,(Ay)+1
+ 288 0188 1D2D      		mov r17,r13
+ 289 018a 0C2D      		mov r16,r12
+ 290 018c 081B      		sub r16,r24
+ 291 018e 190B      		sbc r17,r25
+ 292 0190 1AF4      		brpl .L30
+ 293 0192 1095      		com r17
+ 294 0194 0195      		neg r16
+ 295 0196 1F4F      		sbci r17,lo8(-1)
+ 296               	.L30:
+ 297 0198 8091 0000 		lds r24,Ax
+ 298 019c 9091 0000 		lds r25,(Ax)+1
+ 299 01a0 C817      		cp r28,r24
+ 300 01a2 D907      		cpc r29,r25
+ 301 01a4 24F4      		brge .L31
+ 302 01a6 8824      		clr r8
+ 303 01a8 8A94      		dec r8
+ 304 01aa 982C      		mov r9,r8
+ 305 01ac 03C0      		rjmp .L32
+ 306               	.L31:
+ 307 01ae 8824      		clr r8
+ 308 01b0 9924      		clr r9
+ 309 01b2 8394      		inc r8
+ 310               	.L32:
+ 311 01b4 8091 0000 		lds r24,Ay
+ 312 01b8 9091 0000 		lds r25,(Ay)+1
+ 313 01bc C816      		cp r12,r24
+ 314 01be D906      		cpc r13,r25
+ 315 01c0 24F4      		brge .L33
+ 316 01c2 AA24      		clr r10
+ 317 01c4 AA94      		dec r10
+ 318 01c6 BA2C      		mov r11,r10
+ 319 01c8 03C0      		rjmp .L34
+ 320               	.L33:
+ 321 01ca AA24      		clr r10
+ 322 01cc BB24      		clr r11
+ 323 01ce A394      		inc r10
+ 324               	.L34:
+ 325 01d0 E016      		cp r14,r16
+ 326 01d2 F106      		cpc r15,r17
+ 327 01d4 3CF1      		brlt .L35
+ 328 01d6 000F      		lsl r16
+ 329 01d8 111F      		rol r17
+ 330 01da 9F2D      		mov r25,r15
+ 331 01dc 8E2D      		mov r24,r14
+ 332 01de 880F      		lsl r24
+ 333 01e0 991F      		rol r25
+ 334 01e2 C02E      		mov r12,r16
+ 335 01e4 D12E      		mov r13,r17
+ 336 01e6 C81A      		sub r12,r24
+ 337 01e8 D90A      		sbc r13,r25
+ 338 01ea D12F      		mov r29,r17
+ 339 01ec C02F      		mov r28,r16
+ 340 01ee CE19      		sub r28,r14
+ 341 01f0 DF09      		sbc r29,r15
+ 342 01f2 1E14      		cp __zero_reg__,r14
+GAS LISTING /tmp/ccFkCDwv.s 			page 7
+
+
+ 343 01f4 1F04      		cpc __zero_reg__,r15
+ 344 01f6 DCF5      		brge .L42
+ 345               	.L41:
+ 346 01f8 1C16      		cp __zero_reg__,r28
+ 347 01fa 1D06      		cpc __zero_reg__,r29
+ 348 01fc 34F4      		brge .L39
+ 349 01fe CC0D      		add r28,r12
+ 350 0200 DD1D      		adc r29,r13
+ 351 0202 6A2D      		mov r22,r10
+ 352 0204 882D      		mov r24,r8
+ 353 0206 44DF      		rcall MotorStepXY
+ 354 0208 05C0      		rjmp .L40
+ 355               	.L39:
+ 356 020a C00F      		add r28,r16
+ 357 020c D11F      		adc r29,r17
+ 358 020e 60E0      		ldi r22,lo8(0)
+ 359 0210 882D      		mov r24,r8
+ 360 0212 3EDF      		rcall MotorStepXY
+ 361               	.L40:
+ 362 0214 18DF      		rcall MotorDelay
+ 363 0216 0894      		sec
+ 364 0218 E108      		sbc r14,__zero_reg__
+ 365 021a F108      		sbc r15,__zero_reg__
+ 366 021c 1E14      		cp __zero_reg__,r14
+ 367 021e 1F04      		cpc __zero_reg__,r15
+ 368 0220 5CF3      		brlt .L41
+ 369 0222 25C0      		rjmp .L42
+ 370               	.L35:
+ 371 0224 EE0C      		lsl r14
+ 372 0226 FF1C      		rol r15
+ 373 0228 912F      		mov r25,r17
+ 374 022a 802F      		mov r24,r16
+ 375 022c 880F      		lsl r24
+ 376 022e 991F      		rol r25
+ 377 0230 CE2C      		mov r12,r14
+ 378 0232 DF2C      		mov r13,r15
+ 379 0234 C81A      		sub r12,r24
+ 380 0236 D90A      		sbc r13,r25
+ 381 0238 DF2D      		mov r29,r15
+ 382 023a CE2D      		mov r28,r14
+ 383 023c C01B      		sub r28,r16
+ 384 023e D10B      		sbc r29,r17
+ 385 0240 1016      		cp __zero_reg__,r16
+ 386 0242 1106      		cpc __zero_reg__,r17
+ 387 0244 A4F4      		brge .L42
+ 388               	.L48:
+ 389 0246 1C16      		cp __zero_reg__,r28
+ 390 0248 1D06      		cpc __zero_reg__,r29
+ 391 024a 34F4      		brge .L46
+ 392 024c CC0D      		add r28,r12
+ 393 024e DD1D      		adc r29,r13
+ 394 0250 6A2D      		mov r22,r10
+ 395 0252 882D      		mov r24,r8
+ 396 0254 1DDF      		rcall MotorStepXY
+ 397 0256 05C0      		rjmp .L47
+ 398               	.L46:
+ 399 0258 CE0D      		add r28,r14
+GAS LISTING /tmp/ccFkCDwv.s 			page 8
+
+
+ 400 025a DF1D      		adc r29,r15
+ 401 025c 6A2D      		mov r22,r10
+ 402 025e 80E0      		ldi r24,lo8(0)
+ 403 0260 17DF      		rcall MotorStepXY
+ 404               	.L47:
+ 405 0262 F1DE      		rcall MotorDelay
+ 406 0264 0150      		subi r16,lo8(-(-1))
+ 407 0266 1040      		sbci r17,hi8(-(-1))
+ 408 0268 1016      		cp __zero_reg__,r16
+ 409 026a 1106      		cpc __zero_reg__,r17
+ 410 026c 64F3      		brlt .L48
+ 411               	.L42:
+ 412 026e 60E0      		ldi r22,lo8(0)
+ 413 0270 862F      		mov r24,r22
+ 414 0272 0EDF      		rcall MotorStepXY
+ 415               	/* epilogue: frame size=0 */
+ 416 0274 DF91      		pop r29
+ 417 0276 CF91      		pop r28
+ 418 0278 1F91      		pop r17
+ 419 027a 0F91      		pop r16
+ 420 027c FF90      		pop r15
+ 421 027e EF90      		pop r14
+ 422 0280 DF90      		pop r13
+ 423 0282 CF90      		pop r12
+ 424 0284 BF90      		pop r11
+ 425 0286 AF90      		pop r10
+ 426 0288 9F90      		pop r9
+ 427 028a 8F90      		pop r8
+ 428 028c 0895      		ret
+ 429               	/* epilogue end (size=13) */
+ 430               	/* function MotorBresLine size 167 (142) */
+ 431               		.size	MotorBresLine, .-MotorBresLine
+ 432               	.global	MotorBresCircle
+ 433               		.type	MotorBresCircle, @function
+ 434               	MotorBresCircle:
+ 435               	/* prologue: frame size=0 */
+ 436               	/* prologue end (size=0) */
+ 437 028e D4DE      		rcall MotorDelayInit
+ 438               	/* epilogue: frame size=0 */
+ 439 0290 0895      		ret
+ 440               	/* epilogue end (size=1) */
+ 441               	/* function MotorBresCircle size 2 (1) */
+ 442               		.size	MotorBresCircle, .-MotorBresCircle
+ 443               		.lcomm delayMs,1
+ 444               		.lcomm delayCntr,1
+ 445               	/* File "motors.c": code  331 = 0x014b ( 295), prologues  14, epilogues  22 */
+GAS LISTING /tmp/ccFkCDwv.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 motors.c
+                            *ABS*:0000003f __SREG__
+                            *ABS*:0000003e __SP_H__
+                            *ABS*:0000003d __SP_L__
+                            *ABS*:00000000 __tmp_reg__
+                            *ABS*:00000001 __zero_reg__
+     /tmp/ccFkCDwv.s:15     .bss:00000000 stableLimitSwitches
+     /tmp/ccFkCDwv.s:21     .bss:00000001 Ax
+     /tmp/ccFkCDwv.s:27     .bss:00000003 Ay
+                             .bss:00000005 lastLimitSwitches.0
+     /tmp/ccFkCDwv.s:33     .text:00000000 polling_fc
+     /tmp/ccFkCDwv.s:68     .text:00000038 MotorDelayInit
+     /tmp/ccFkCDwv.s:29     .bss:00000006 delayMs
+     /tmp/ccFkCDwv.s:443    .bss:00000007 delayCntr
+     /tmp/ccFkCDwv.s:82     .text:00000046 MotorDelay
+     /tmp/ccFkCDwv.s:111    .text:00000078 motors
+     /tmp/ccFkCDwv.s:130    .text:00000088 SolenoidActivate
+     /tmp/ccFkCDwv.s:141    .text:0000008c SolenoidDeactivate
+     /tmp/ccFkCDwv.s:152    .text:00000090 MotorStepXY
+     /tmp/ccFkCDwv.s:224    .text:00000112 MotorGotoOrigin
+     /tmp/ccFkCDwv.s:254    .text:00000144 MotorBresLine
+     /tmp/ccFkCDwv.s:434    .text:0000028e MotorBresCircle
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+delay

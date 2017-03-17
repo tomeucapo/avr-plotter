@@ -1,0 +1,480 @@
+%!PS-Adobe-3.0
+%%Title: (unknown), solder mask solder side
+%%Creator: pcb-bin 1.99p
+%%CreationDate: Mon Apr 26 13:24:07 2004
+%%For: tomeu (Tomeu Capó,,,)
+%%LanguageLevel: 1
+%%Orientation: Portrait
+%%Pages: 1
+%%PageOrder: Ascend
+%%IncludeFeature: *PageSize   a4  
+%%EndComments
+%%BeginProlog
+
+/PcbDict 200 dict def
+PcbDict begin
+PcbDict /DictMatrix matrix put
+
+% some constants
+/Black {0.0 mysetgray} def
+/White {1.0 mysetgray} def
+/TAN {0.207106781} def
+/MTAN {-0.207106781} def
+
+% draw a filled polygon
+% get (x,y)... and number of points from stack
+/PO {
+	/number exch def
+	newpath
+	moveto
+	number 1 sub { lineto } repeat
+	closepath fill stroke
+} def
+
+/P {
+% draw a pin-polygon,
+% get x, y and thickness from stack
+	/thickness exch def /y exch def /x exch def
+	gsave x y translate thickness thickness scale
+	0.5  MTAN
+	TAN  -0.5
+	MTAN -0.5
+	-0.5 MTAN
+	-0.5 TAN
+	MTAN 0.5
+	TAN  0.5
+	0.5  TAN
+	8 PO grestore
+} def
+
+/PV {
+% pin or via, x, y and thickness are on the stack
+	/drillinghole exch def /thickness exch def /y exch def /x exch def
+	x y thickness P
+% draw drilling hole
+	gsave White 0 setlinewidth
+   newpath x y drillinghole 2 div 0 360 arc closepath fill stroke
+   grestore
+} def
+
+/PVR {
+% pin or via, x, y and thickness are on the stack
+	/drillinghole exch def /thickness exch def /y exch def /x exch def
+	gsave 0 setlinewidth
+	newpath x y thickness 2 div 0 360 arc closepath fill stroke
+% draw drilling whole
+	White
+	newpath x y drillinghole 2 div 0 360 arc closepath fill stroke
+	grestore
+} def
+
+/PVSQ {
+% square pin or via, x, y and thickness are on the stack
+	/drillinghole exch def /thickness exch def /y exch def /x exch def
+	newpath x thickness 2 div sub y thickness 2 div sub moveto
+	thickness 0 rlineto 0 thickness rlineto
+	thickness neg 0 rlineto closepath fill stroke
+% draw drilling hole
+	gsave White 0 setlinewidth
+   newpath x y drillinghole 2 div 0 360 arc closepath fill stroke
+   grestore
+} def
+
+/DH {
+% drill helpher; x, y, hole, copper-thickness are on stack
+	/copper exch def /hole exch def /y exch def /x exch def
+   gsave copper setlinewidth
+   newpath x y hole copper add 2 div 0 360 arc closepath stroke
+   grestore
+} def
+
+/L {
+% line, get x1, y1, x2, y2 and thickness from stack
+	/thick exch def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+	gsave thick setlinewidth
+	x1 y1 moveto x2 y2 lineto stroke
+	grestore
+} def
+
+/CL {
+% line, get x1, y1, x2, y2 and thickness from stack
+	/thick exch def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+	gsave White thick setlinewidth
+	x1 y1 moveto x2 y2 lineto stroke
+	grestore
+} def
+
+/B {
+% filled box, get x1, y1, x2 and y2 from stack
+	/y2 exch def /x2 exch def /y1 exch def /x1 exch def
+	newpath
+	x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto
+	closepath fill stroke
+} def
+
+/PA {
+% pad, same as line
+	L
+} def
+
+/A {
+% arc for elements, get x, y, width, height, thickness
+% startangle and delta-angle from stack
+  /delta exch def /start exch def /thickness exch def
+  /height exch def /width exch def /y exch def /x exch def
+% draw it
+	gsave thickness setlinewidth /save DictMatrix currentmatrix def
+% scaling is less then zero because the coord system has to be swapped
+	x y translate width neg height scale
+	0 0 1 start start delta add arc save setmatrix stroke
+	grestore
+} def
+
+/CA {
+% arc for elements, get x, y, width, height, thickness
+% startangle and delta-angle from stack
+  /delta exch def /start exch def /thickness exch def
+  /height exch def /width exch def /y exch def /x exch def
+% draw it
+	gsave White thickness setlinewidth /save DictMatrix currentmatrix def
+% scaling is less then zero because the coord system has to be swapped
+	x y translate width neg height scale
+	0 0 1 start start delta add arc save setmatrix stroke
+	grestore
+} def
+
+/CLRPV {
+% clears a pin/via for groundplane; x,y and thickness are on stack
+   /thickness exch def /y exch def /x exch def
+	gsave White x y thickness P grestore
+} def
+
+/CLRPVSQ {
+% clears a square pin, x,y and thickness are on stack
+	/thickness exch def /y exch def /x exch def
+   gsave White
+	newpath x thickness 2 div sub y thickness 2 div sub moveto
+	thickness 0 rlineto 0 thickness rlineto
+	thickness neg 0 rlineto closepath fill stroke
+	grestore
+} def
+
+/CLRPVR {
+% clears a round pin/via for groundplane; x,y and thickness are on the stack
+	/thickness exch def /y exch def /x exch def
+	gsave White 0 setlinewidth
+	newpath x y thickness 2 div 0 360 arc closepath fill stroke
+	grestore
+} def
+
+/CLRPA {
+% clear line, get x1, y1, x2, y2 and thickness from stack
+	/thick exch def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+	gsave White thick setlinewidth
+	x1 y1 moveto x2 y2 lineto stroke
+	grestore
+} def
+
+/CLRB {
+% cleared box, get x1, y1, x2 and y2 from stack
+	/y2 exch def /x2 exch def /y1 exch def /x1 exch def
+	gsave White newpath
+	x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto
+	closepath fill stroke
+	grestore
+} def
+
+/FILL {
+% draw a filled rectangle for the ground plane
+% get x1, y1, x2 and y2 from stack
+	/y2 exch def /x2 exch def /y1 exch def /x1 exch def
+   gsave 0 setlinewidth
+	newpath
+	x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto
+	closepath fill stroke
+   grestore
+} def
+
+/Outline {
+% outline, get x1, y1, x2 and y2 from stack
+	/y2 exch def /x2 exch def /y1 exch def /x1 exch def
+   gsave 0.175 setlinewidth
+	newpath
+	x1 y1 moveto x2 y1 lineto x2 y2 lineto x1 y2 lineto
+	closepath stroke
+   grestore
+} def
+
+/Alignment {
+% alignment targets, get x1, y1, x2, y2 and distance from stack
+	/dis exch def /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+   gsave 0.175 setlinewidth
+   newpath x1 y1 dis add moveto
+      0 dis 2 mul neg rlineto
+      dis neg dis rmoveto
+      dis 2 mul 0 rlineto
+   stroke
+   newpath x1 y1 dis 0 90 arcn stroke
+   newpath x1 y2 dis sub moveto 0 dis rlineto dis 0 rlineto stroke
+   newpath x2 y2 dis sub moveto
+      0 2 dis mul rlineto
+      dis dup neg rmoveto
+      2 dis mul neg 0 rlineto   stroke
+   newpath x2 y1 dis add moveto 0 dis neg rlineto dis neg 0 rlineto stroke
+   grestore
+} def
+
+/mysetgray {neg 1.0 add setgray} def
+/mysetrgbcolor {
+  /blue exch def /green exch def /red exch def
+  1.0 red sub 1.0 green sub 1.0 blue sub setrgbcolor
+} def
+%%EndProlog
+%%BeginDefaults
+%%EndDefaults
+%%BeginSetup
+  a4  
+0.0 setlinewidth
+1 setlinecap
+Black
+%%EndSetup
+%%Page: 1 1
+%%BeginPageSetup
+%%EndPageSetup
+gsave White newpath
+30 -1 moveto 476 -1 lineto 476 357 lineto 30 357 lineto
+closepath fill stroke grestore
+% PCBMIN(-40000,-40000), PCBMAX(576860,455400)
+% PCBOFFSET(43380,289), PCBSCALE(1.00000)
+% PCBSTARTDATA --- do not remove ---
+gsave
+0.00072 0.00072 scale
+43380 289 translate
+1.000 1.000 scale
+0 495400 translate
+1 -1 scale
+40000 40000 translate
+/mysetgray { setgray } def
+/mysetrgbcolor { setrgbcolor } def
+
+-40000 -40000 576860 455400 20000 Alignment
+153937 151968 6000 CLRPVSQ
+153937 161968 6000 CLRPVR
+78312 266812 6000 CLRPVSQ
+78312 276812 6000 CLRPVR
+78312 286812 6000 CLRPVR
+78312 296812 6000 CLRPVR
+78312 306812 6000 CLRPVR
+78312 316812 6000 CLRPVR
+78312 326812 6000 CLRPVR
+78312 336812 6000 CLRPVR
+108312 336812 6000 CLRPVR
+108312 326812 6000 CLRPVR
+108312 316812 6000 CLRPVR
+108312 306812 6000 CLRPVR
+108312 296812 6000 CLRPVR
+108312 286812 6000 CLRPVR
+108312 276812 6000 CLRPVR
+108312 266812 6000 CLRPVR
+57312 288812 6000 CLRPVSQ
+57312 298812 6000 CLRPVR
+52312 316812 6000 CLRPVSQ
+62312 316812 6000 CLRPVR
+57312 276812 6000 CLRPVSQ
+57312 266812 6000 CLRPVR
+31890 174133 5000 CLRPVSQ
+31890 194133 5000 CLRPVR
+408400 306200 5000 CLRPVSQ
+368400 306200 5000 CLRPVR
+44606 101575 5000 CLRPVSQ
+64606 101575 5000 CLRPVR
+62312 249812 6000 CLRPVSQ
+52312 249812 6000 CLRPVR
+529760 48100 5000 CLRPVSQ
+529760 8100 5000 CLRPVR
+279000 310000 6000 CLRPVSQ
+269000 310000 6000 CLRPVR
+189000 306000 6000 CLRPVSQ
+189000 286000 6000 CLRPVR
+189000 321000 5000 CLRPVSQ
+209000 321000 5000 CLRPVR
+494960 47900 5000 CLRPVSQ
+474960 47900 5000 CLRPVR
+268000 59000 5000 CLRPVSQ
+248000 59000 5000 CLRPVR
+494960 74300 5000 CLRPVSQ
+474960 74300 5000 CLRPVR
+88818 84252 5000 CLRPVSQ
+88818 44252 5000 CLRPVR
+326000 212000 6000 CLRPVSQ
+336000 212000 6000 CLRPVR
+326000 222000 6000 CLRPVR
+336000 222000 6000 CLRPVR
+326000 232000 6000 CLRPVR
+336000 232000 6000 CLRPVR
+326000 242000 6000 CLRPVR
+336000 242000 6000 CLRPVR
+326000 252000 6000 CLRPVR
+336000 252000 6000 CLRPVR
+121654 367322 6000 CLRPVSQ
+110854 367322 6000 CLRPVR
+100054 367322 6000 CLRPVR
+89254 367322 6000 CLRPVR
+78454 367322 6000 CLRPVR
+116254 378522 6000 CLRPVR
+105454 378522 6000 CLRPVR
+94654 378522 6000 CLRPVR
+83854 378522 6000 CLRPVR
+51454 372922 25000 CLRPVR
+148654 372922 25000 CLRPVR
+193307 382283 10000 CLRPVR
+183307 372283 10000 CLRPVR
+183307 392283 10000 CLRPVR
+203307 372283 10000 CLRPVR
+203307 392283 10000 CLRPVR
+374000 252000 8000 CLRPVSQ
+374000 232000 8000 CLRPVR
+369000 242000 8000 CLRPVR
+189000 271000 5000 CLRPVSQ
+209000 271000 5000 CLRPVR
+208000 72000 6000 CLRPVSQ
+208000 82000 6000 CLRPVR
+208000 92000 6000 CLRPVR
+208000 102000 6000 CLRPVR
+208000 112000 6000 CLRPVR
+208000 122000 6000 CLRPVR
+208000 132000 6000 CLRPVR
+208000 142000 6000 CLRPVR
+208000 152000 6000 CLRPVR
+208000 162000 6000 CLRPVR
+208000 172000 6000 CLRPVR
+208000 182000 6000 CLRPVR
+208000 192000 6000 CLRPVR
+208000 202000 6000 CLRPVR
+208000 212000 6000 CLRPVR
+208000 222000 6000 CLRPVR
+208000 232000 6000 CLRPVR
+208000 242000 6000 CLRPVR
+208000 252000 6000 CLRPVR
+208000 262000 6000 CLRPVR
+268000 262000 6000 CLRPVR
+268000 252000 6000 CLRPVR
+268000 242000 6000 CLRPVR
+268000 232000 6000 CLRPVR
+268000 222000 6000 CLRPVR
+268000 212000 6000 CLRPVR
+268000 202000 6000 CLRPVR
+268000 192000 6000 CLRPVR
+268000 182000 6000 CLRPVR
+268000 172000 6000 CLRPVR
+268000 162000 6000 CLRPVR
+268000 152000 6000 CLRPVR
+268000 142000 6000 CLRPVR
+268000 132000 6000 CLRPVR
+268000 122000 6000 CLRPVR
+268000 112000 6000 CLRPVR
+268000 102000 6000 CLRPVR
+268000 92000 6000 CLRPVR
+268000 82000 6000 CLRPVR
+268000 72000 6000 CLRPVR
+172000 302000 5000 CLRPVSQ
+172000 262000 5000 CLRPVR
+450300 326600 6000 CLRPVSQ
+460300 326600 6000 CLRPVR
+450300 336600 6000 CLRPVR
+460300 336600 6000 CLRPVR
+450300 346600 6000 CLRPVR
+460300 346600 6000 CLRPVR
+450300 356600 6000 CLRPVR
+460300 356600 6000 CLRPVR
+450300 366600 6000 CLRPVR
+460300 366600 6000 CLRPVR
+450300 376600 6000 CLRPVR
+460300 376600 6000 CLRPVR
+450300 386600 6000 CLRPVR
+460300 386600 6000 CLRPVR
+450300 396600 6000 CLRPVR
+460300 396600 6000 CLRPVR
+279000 302000 5000 CLRPVSQ
+279000 262000 5000 CLRPVR
+512960 48100 8000 CLRPVSQ
+512960 58100 8000 CLRPVR
+512960 68100 8000 CLRPVR
+141339 166929 5000 CLRPVSQ
+141339 206929 5000 CLRPVR
+172000 310000 6000 CLRPVSQ
+162000 310000 6000 CLRPVR
+330000 66000 6000 CLRPVSQ
+340000 66000 6000 CLRPVR
+350000 66000 6000 CLRPVR
+360000 66000 6000 CLRPVR
+360000 36000 6000 CLRPVR
+350000 36000 6000 CLRPVR
+340000 36000 6000 CLRPVR
+330000 36000 6000 CLRPVR
+408400 296200 5000 CLRPVSQ
+368400 296200 5000 CLRPVR
+326400 276000 6000 CLRPVSQ
+326400 286000 6000 CLRPVR
+326400 296000 6000 CLRPVR
+326400 306000 6000 CLRPVR
+356400 306000 6000 CLRPVR
+356400 296000 6000 CLRPVR
+356400 286000 6000 CLRPVR
+356400 276000 6000 CLRPVR
+492360 16300 10000 CLRPVSQ
+476760 16300 10000 CLRPVR
+147638 34252 6000 CLRPVSQ
+157638 34252 6000 CLRPVR
+167638 34252 6000 CLRPVR
+177638 34252 6000 CLRPVR
+187638 34252 6000 CLRPVR
+197638 34252 6000 CLRPVR
+43937 194961 6000 CLRPVSQ
+53937 194961 6000 CLRPVR
+63937 194961 6000 CLRPVR
+73937 194961 6000 CLRPVR
+83937 194961 6000 CLRPVR
+93937 194961 6000 CLRPVR
+103937 194961 6000 CLRPVR
+103937 164961 6000 CLRPVR
+93937 164961 6000 CLRPVR
+83937 164961 6000 CLRPVR
+73937 164961 6000 CLRPVR
+63937 164961 6000 CLRPVR
+53937 164961 6000 CLRPVR
+43937 164961 6000 CLRPVR
+68693 84283 5000 CLRPVSQ
+68693 44283 5000 CLRPVR
+78142 84283 5000 CLRPVSQ
+78142 44283 5000 CLRPVR
+68740 34252 6000 CLRPVSQ
+78740 34252 6000 CLRPVR
+88740 34252 6000 CLRPVR
+98740 34252 6000 CLRPVR
+108740 34252 6000 CLRPVR
+118740 34252 6000 CLRPVR
+128740 34252 6000 CLRPVR
+98220 84283 5000 CLRPVSQ
+98220 44283 5000 CLRPVR
+501575 141654 6000 CLRPVSQ
+501575 131654 6000 CLRPVR
+501575 121654 6000 CLRPVR
+44331 144961 6000 CLRPVSQ
+54331 144961 6000 CLRPVR
+64331 144961 6000 CLRPVR
+74331 144961 6000 CLRPVR
+84331 144961 6000 CLRPVR
+94331 144961 6000 CLRPVR
+104331 144961 6000 CLRPVR
+104331 114961 6000 CLRPVR
+94331 114961 6000 CLRPVR
+84331 114961 6000 CLRPVR
+74331 114961 6000 CLRPVR
+64331 114961 6000 CLRPVR
+54331 114961 6000 CLRPVR
+44331 114961 6000 CLRPVR
+grestore
+% PCBENDDATA --- do not remove ---
+showpage
+%%EOF
